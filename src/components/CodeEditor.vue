@@ -16,6 +16,7 @@ import { onMounted, ref, toRaw, withDefaults, defineProps, watch } from "vue";
  */
 interface Props {
   value: string;
+  language?: string;
   handleChange: (v: string) => void;
 }
 
@@ -33,13 +34,13 @@ const props = withDefaults(defineProps<Props>(), {
 const codeEditorRef = ref();
 const codeEditor = ref();
 
-const fillValue = () => {
-  if (!codeEditor.value) {
-    return;
-  }
-  // 改变值
-  toRaw(codeEditor.value).setValue("新的值");
-};
+// const fillValue = () => {
+//   if (!codeEditor.value) {
+//     return;
+//   }
+//   // 改变值
+//   toRaw(codeEditor.value).setValue("新的值");
+// };
 
 watch(
   () => props.language,

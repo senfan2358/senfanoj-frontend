@@ -7,7 +7,7 @@ export default {
   namespaced: true,
   state: () => ({
     loginUser: {
-      userName: "未登录",
+      userName: "登录",
     },
   }),
   actions: {
@@ -28,5 +28,9 @@ export default {
     updateUser(state, payload) {
       state.loginUser = payload;
     },
+  },
+  removeUserRole(state: any) {
+    // 移除 userRole 属性
+    delete state.loginUser.userRole;
   },
 } as StoreOptions<any>;

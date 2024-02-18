@@ -49,9 +49,9 @@
               placeholder="选择编程语言"
             >
               <a-option>java</a-option>
-              <a-option>cpp</a-option>
-              <a-option>go</a-option>
-              <a-option>html</a-option>
+              <!--              <a-option>cpp</a-option>-->
+              <!--              <a-option>go</a-option>-->
+              <!--              <a-option>html</a-option>-->
             </a-select>
           </a-form-item>
         </a-form>
@@ -70,15 +70,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, withDefaults, defineProps } from "vue";
+import { onMounted, ref, watchEffect, withDefaults, defineProps } from "vue";
 import message from "@arco-design/web-vue/es/message";
+import CodeEditor from "@/components/CodeEditor.vue";
+import MdViewer from "@/components/MdViewer.vue";
 import {
   QuestionControllerService,
   QuestionSubmitAddRequest,
   QuestionVO,
 } from "../../../generated";
-import CodeEditor from "@/components/CodeEditor.vue";
-import MdViewer from "@/components/MdViewer.vue";
 
 interface Props {
   id: string;
@@ -137,7 +137,7 @@ const changeCode = (value: string) => {
 };
 </script>
 
-<style scoped>
+<style>
 #viewQuestionView {
   max-width: 1400px;
   margin: 0 auto;

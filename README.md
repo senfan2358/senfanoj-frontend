@@ -1,6 +1,13 @@
 # senfanoj-frontend
 
 ## Project setup
+
+## 根据后台生成代码
+
+```shell
+openapi --input http://localhost:8101/api/v2/api-docs --output ./generated --client axios
+```
+
 ```
 npm install
 ```

@@ -125,6 +125,7 @@ let form = ref({
     },
   ],
 });
+
 /**
  * 根据题目 id 获取老的数据
  */
@@ -167,6 +168,7 @@ const loadData = async () => {
     message.error("加载失败，" + res.message);
   }
 };
+
 onMounted(() => {
   loadData();
 });

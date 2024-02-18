@@ -1,6 +1,7 @@
 <template>
   <div id="manageQuestionView">
     <a-table
+      :ref="tableRef"
       :columns="columns"
       :data="dataList"
       :pagination="{
@@ -11,6 +12,12 @@
       }"
       @page-change="onPageChange"
     >
+      <template #judgeConfig="{ record }">
+        {{ record.judgeConfig }}
+      </template>
+      <template #createTime="{ record }">
+        {{ moment(record.createTime).format("YYYY-MM-DD") }}
+      </template>
       <template #optional="{ record }">
         <a-space>
           <a-button type="primary" @click="doUpdate(record)"> 修改</a-button>
@@ -23,10 +30,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
+import { Question, QuestionControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import { Question } from "../../../generated/models/Question";
-import { QuestionControllerService } from "../../../generated";
+import { useRouter } from "vue-router";
+import moment from "moment";
+
+const tableRef = ref();
 
 const dataList = ref([]);
 const total = ref(0);
@@ -94,7 +103,7 @@ const columns = [
   },
   {
     title: "判题配置",
-    dataIndex: "judgeConfig",
+    slotName: "judgeConfig",
   },
   {
     title: "判题用例",
@@ -106,7 +115,8 @@ const columns = [
   },
   {
     title: "创建时间",
-    dataIndex: "createTime",
+    slotName: "createTime",
+    // width: "150",
   },
   {
     title: "操作",
@@ -120,13 +130,14 @@ const onPageChange = (page: number) => {
     current: page,
   };
 };
+
 const doDelete = async (question: Question) => {
   const res = await QuestionControllerService.deleteQuestionUsingPost({
     id: question.id,
   });
   if (res.code === 0) {
     message.success("删除成功");
-    await loadData();
+    loadData();
   } else {
     message.error("删除失败");
   }

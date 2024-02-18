@@ -7,12 +7,15 @@
       <a-layout-content class="content">
         <router-view />
       </a-layout-content>
-      <a-layout-footer class="footer"></a-layout-footer>
+      <a-layout-footer class="footer">
+        <!--        <a href="https://yupi.icu" target="_blank">-->
+        <!--          编程导航知识星球 by 程序员鱼皮-->
+        <!--        </a>-->
+      </a-layout-footer>
     </a-layout>
   </div>
 </template>
 
-<!--scoped将样式局限在类里-->
 <style scoped>
 #basicLayout {
 }

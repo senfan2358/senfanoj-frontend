@@ -13,6 +13,7 @@
     </a-form>
     <a-divider size="0" />
     <a-table
+      :ref="tableRef"
       :columns="columns"
       :data="dataList"
       :pagination="{
@@ -53,14 +54,17 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
-import message from "@arco-design/web-vue/es/message";
-import { Question } from "../../../generated/models/Question";
 import {
+  Question,
   QuestionControllerService,
   QuestionQueryRequest,
 } from "../../../generated";
+import message from "@arco-design/web-vue/es/message";
+import * as querystring from "querystring";
+import { useRouter } from "vue-router";
 import moment from "moment";
+
+const tableRef = ref();
 
 const dataList = ref([]);
 const total = ref(0);
@@ -72,7 +76,7 @@ const searchParams = ref<QuestionQueryRequest>({
 });
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listMyQuestionVoByPageUsingPost(
+  const res = await QuestionControllerService.listQuestionVoByPageUsingPost(
     searchParams.value
   );
   if (res.code === 0) {
@@ -130,17 +134,6 @@ const onPageChange = (page: number) => {
     ...searchParams.value,
     current: page,
   };
-};
-const doDelete = async (question: Question) => {
-  const res = await QuestionControllerService.deleteQuestionUsingPost({
-    id: question.id,
-  });
-  if (res.code === 0) {
-    message.success("删除成功");
-    await loadData();
-  } else {
-    message.error("删除失败");
-  }
 };
 
 const router = useRouter();

@@ -13,7 +13,7 @@
         >
           <div class="title-bar">
             <img class="logo" src="../assets/oj-logo.svg" />
-            <div class="title">senfan</div>
+            <div class="title">OJ</div>
           </div>
         </a-menu-item>
         <a-menu-item v-for="item in visibleRoutes" :key="item.path">
@@ -22,20 +22,36 @@
       </a-menu>
     </a-col>
     <a-col flex="100px">
-      <div>
-        {{ store.state.user?.loginUser?.userName ?? "未登录" }}
-      </div>
+      <a-space size="large">
+        <a-dropdown>
+          <a-button @click="login">
+            {{ store.state.user?.loginUser?.userName ?? "登录" }}
+          </a-button>
+          <template #content>
+            <a-doption
+              :disabled="store.state.user?.loginUser?.userRole === 'notLogin'"
+              >个人中心</a-doption
+            >
+            <a-doption
+              @click="logout"
+              :disabled="store.state.user?.loginUser?.userRole === 'notLogin'"
+              >注销</a-doption
+            >
+          </template>
+        </a-dropdown>
+      </a-space>
     </a-col>
   </a-row>
 </template>
 
 <script setup lang="ts">
 import { routes } from "../router/routes";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import checkAccess from "@/access/checkAccess";
 import ACCESS_ENUM from "@/access/accessEnum";
+import { UserControllerService } from "../../generated";
 
 const router = useRouter();
 const store = useStore();
@@ -63,10 +79,23 @@ const selectedKeys = ref(["/"]);
 router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path];
 });
-
+const login = async () => {
+  console.log(store.state.user);
+  if (store.state.user?.loginUser?.userRole == "notLogin") {
+    router.push({
+      path: "/user/login",
+      replace: true,
+    });
+  }
+};
+const logout = async () => {
+  const res = await UserControllerService.userLogoutUsingPost();
+  store.commit("removeUserRole");
+  location.reload();
+};
 setTimeout(() => {
   store.dispatch("user/getLoginUser", {
-    userName: "鱼皮管理员",
+    userName: "管理员",
     userRole: ACCESS_ENUM.ADMIN,
   });
 }, 3000);
@@ -79,10 +108,17 @@ const doMenuClick = (key: string) => {
 </script>
 
 <style scoped>
-.menu-demo {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 40px;
-  background-color: var(--color-neutral-2);
+.title-bar {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  color: #444;
+  margin-left: 16px;
+}
+
+.logo {
+  height: 48px;
 }
 </style>
