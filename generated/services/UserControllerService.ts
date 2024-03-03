@@ -238,12 +238,14 @@ userRegisterRequest: UserRegisterRequest,
 
     /**
      * updateUser
+     * @param file file
      * @param userUpdateRequest userUpdateRequest
      * @returns BaseResponse_boolean_ OK
      * @returns any Created
      * @throws ApiError
      */
     public static updateUserUsingPost(
+file: Blob,
 userUpdateRequest: UserUpdateRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
@@ -272,6 +274,28 @@ userUpdateMyRequest: UserUpdateMyRequest,
             method: 'POST',
             url: '/api/user/update/my',
             body: userUpdateMyRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * uploadAvatar
+     * @param file file
+     * @returns BaseResponse_boolean_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static uploadAvatarUsingPost(
+file: Blob,
+): CancelablePromise<BaseResponse_boolean_ | any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/user/upload',
+            body: file,
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

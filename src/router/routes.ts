@@ -3,6 +3,7 @@ import HomeView from "@/views/ExampleView.vue";
 import UserLayout from "@/layouts/UserLayout.vue";
 import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
+import UserCenterView from "@/views/user/UserCenterView.vue";
 import AdminView from "@/views/AdminView.vue";
 import NoAuthView from "@/views/NoAuthView.vue";
 import ACCESS_ENUM from "@/access/accessEnum";
@@ -34,6 +35,14 @@ export const routes: Array<RouteRecordRaw> = [
         component: UserRegisterView,
       },
     ],
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/user/center",
+    name: "用户中心",
+    component: UserCenterView,
     meta: {
       hideInMenu: true,
     },

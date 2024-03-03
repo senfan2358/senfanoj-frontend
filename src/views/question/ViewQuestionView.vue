@@ -33,7 +33,25 @@
             </a-card>
           </a-tab-pane>
           <a-tab-pane key="comment" title="评论" disabled> 评论区</a-tab-pane>
-          <a-tab-pane key="answer" title="答案"> 暂时无法查看答案</a-tab-pane>
+          <a-tab-pane key="answer" title="答案">
+            <a-card v-if="question" :title="question.title">
+              <a-descriptions
+                title="判题条件"
+                :column="{ xs: 1, md: 2, lg: 3 }"
+              >
+                <a-descriptions-item label="时间限制">
+                  {{ question.judgeConfig.timeLimit ?? 0 }}
+                </a-descriptions-item>
+                <a-descriptions-item label="内存限制">
+                  {{ question.judgeConfig.memoryLimit ?? 0 }}
+                </a-descriptions-item>
+                <a-descriptions-item label="堆栈限制">
+                  {{ question.judgeConfig.stackLimit ?? 0 }}
+                </a-descriptions-item>
+              </a-descriptions>
+              <MdViewer :value="question.answer || ''" />
+            </a-card>
+          </a-tab-pane>
         </a-tabs>
       </a-col>
       <a-col :md="12" :xs="24">
@@ -103,7 +121,15 @@ const loadData = async () => {
 
 const form = ref<QuestionSubmitAddRequest>({
   language: "java",
-  code: "",
+  code:
+    "public class Main {\n" +
+    "    public static void main(String[] args) {\n" +
+    "        // String a = args[0];\n" +
+    "        // String b = args[1];\n" +
+    "\n" +
+    "        // System.out.println(a+b);\n" +
+    "    }\n" +
+    "}",
 });
 
 /**

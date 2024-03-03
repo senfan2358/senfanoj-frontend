@@ -12,7 +12,7 @@
           disabled
         >
           <div class="title-bar">
-            <img class="logo" src="../assets/oj-logo.svg" />
+            <img class="logo" src="../assets/images.png" />
             <div class="title">OJ</div>
           </div>
         </a-menu-item>
@@ -23,6 +23,7 @@
     </a-col>
     <a-col flex="100px">
       <a-space size="large">
+        <a-avatar :imageUrl="store.state.user.loginUser.userAvatar"> </a-avatar>
         <a-dropdown>
           <a-button @click="login">
             {{ store.state.user?.loginUser?.userName ?? "登录" }}
@@ -30,13 +31,14 @@
           <template #content>
             <a-doption
               :disabled="store.state.user?.loginUser?.userRole === 'notLogin'"
-              >个人中心</a-doption
-            >
+              @click="toCenter"
+              >个人中心
+            </a-doption>
             <a-doption
               @click="logout"
               :disabled="store.state.user?.loginUser?.userRole === 'notLogin'"
-              >注销</a-doption
-            >
+              >注销
+            </a-doption>
           </template>
         </a-dropdown>
       </a-space>
@@ -103,6 +105,11 @@ setTimeout(() => {
 const doMenuClick = (key: string) => {
   router.push({
     path: key,
+  });
+};
+const toCenter = () => {
+  router.push({
+    path: "/user/center",
   });
 };
 </script>

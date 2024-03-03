@@ -34,7 +34,7 @@
       @page-change="onPageChange"
     >
       <template #judgeInfo="{ record }">
-        {{ JSON.stringify(record.judgeInfo.message) }}
+        {{ JSON.stringify(record.judgeInfo.message).replace(/^"(.*)"$/, "$1") }}
         <!--        <a-space wrap>-->
         <!--          <a-tag v-if="record.status == 0" color="gray">-->
         <!--            {{ "待判题" }}-->
@@ -67,9 +67,25 @@
         </a-space>
       </template>
       <template #createTime="{ record }">
-        {{ moment(record.createTime).format("YYYY-MM-DD") }}
+        {{ formatTime(record.createTime) }}
+      </template>
+      <template #optional="{ record }">
+        <a-space>
+          <a-button type="primary" @click="lookCode(record)">
+            查看代码
+          </a-button>
+        </a-space>
       </template>
     </a-table>
+    <a-modal
+      v-model:visible="visible"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      width="auto"
+    >
+      <template #title> 代码</template>
+      <pre>{{ showCode }}</pre>
+    </a-modal>
   </div>
 </template>
 
@@ -79,10 +95,12 @@ import {
   Question,
   QuestionControllerService,
   QuestionSubmitQueryRequest,
+  QuestionSubmitVO,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import moment from "moment";
+import MdViewer from "@/components/MdViewer.vue";
 
 const tableRef = ref();
 
@@ -124,7 +142,21 @@ watchEffect(() => {
 onMounted(() => {
   loadData();
 });
-
+const formatTime = (time) => {
+  // 创建一个Date对象
+  const date = new Date(time);
+  // 获取小时、分钟和秒
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+  // 格式化时间为24小时制
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date
+    .getDate()
+    .toString()
+    .padStart(2, "0")} ${hours}:${minutes}:${seconds}`;
+};
 const columns = [
   {
     title: "题目 id",
@@ -142,10 +174,10 @@ const columns = [
     title: "判题状态",
     slotName: "status",
   },
-  {
-    title: "提交者 id",
-    dataIndex: "userId",
-  },
+  // {
+  //   title: "提交者 id",
+  //   dataIndex: "userId",
+  // },
   {
     title: "提交号",
     dataIndex: "id",
@@ -153,6 +185,9 @@ const columns = [
   {
     title: "创建时间",
     slotName: "createTime",
+  },
+  {
+    slotName: "optional",
   },
 ];
 
@@ -166,16 +201,6 @@ const onPageChange = (page: number) => {
 const router = useRouter();
 
 /**
- * 跳转到做题页面
- * @param question
- */
-const toQuestionPage = (question: Question) => {
-  router.push({
-    path: `/view/question/${question.id}`,
-  });
-};
-
-/**
  * 确认搜索，重新加载数据
  */
 const doSubmit = () => {
@@ -184,6 +209,19 @@ const doSubmit = () => {
     ...searchParams.value,
     current: 1,
   };
+};
+const visible = ref(false);
+const showCode = ref("");
+const handleOk = () => {
+  visible.value = false;
+};
+const handleCancel = () => {
+  visible.value = false;
+};
+const lookCode = (questionSubmitVO: QuestionSubmitVO) => {
+  showCode.value = questionSubmitVO.code;
+  visible.value = true;
+  // alert(questionSubmitVO.code);
 };
 </script>
 
