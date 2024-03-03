@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { OrderItem } from './OrderItem';
-import type { QuestionVO } from './QuestionVO';
+import type {OrderItem} from './OrderItem';
+import type {QuestionVO} from './QuestionVO';
 
 export type Page_QuestionVO_ = {
     countId?: string;
@@ -15,6 +15,7 @@ export type Page_QuestionVO_ = {
     pages?: number;
     records?: Array<QuestionVO>;
     searchCount?: boolean;
+    acceptedRate?: string;
     size?: number;
     total?: number;
 };
