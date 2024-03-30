@@ -1,6 +1,6 @@
 <template>
   <div id="viewQuestionView">
-    <a-row :gutter="[24, 24]">
+    <a-row :gutter="[40, 24]">
       <a-col :md="12" :xs="24">
         <a-tabs default-active-key="question">
           <a-tab-pane key="question" title="题目">
@@ -15,9 +15,9 @@
                 <a-descriptions-item label="内存限制">
                   {{ question.judgeConfig.memoryLimit ?? 0 }}
                 </a-descriptions-item>
-                <a-descriptions-item label="堆栈限制">
-                  {{ question.judgeConfig.stackLimit ?? 0 }}
-                </a-descriptions-item>
+                <!--                <a-descriptions-item label="堆栈限制">-->
+                <!--                  {{ question.judgeConfig.stackLimit ?? 0 }}-->
+                <!--                </a-descriptions-item>-->
               </a-descriptions>
               <MdViewer :value="question.content || ''" />
               <template #extra>
@@ -32,7 +32,9 @@
               </template>
             </a-card>
           </a-tab-pane>
-          <a-tab-pane key="comment" title="评论" disabled> 评论区</a-tab-pane>
+          <a-tab-pane key="comment" title="提交记录">
+            <SubmitHistroyView :value="props.id" />
+          </a-tab-pane>
           <a-tab-pane key="answer" title="答案">
             <a-card v-if="question" :title="question.title">
               <a-descriptions
@@ -45,9 +47,9 @@
                 <a-descriptions-item label="内存限制">
                   {{ question.judgeConfig.memoryLimit ?? 0 }}
                 </a-descriptions-item>
-                <a-descriptions-item label="堆栈限制">
-                  {{ question.judgeConfig.stackLimit ?? 0 }}
-                </a-descriptions-item>
+                <!--                <a-descriptions-item label="堆栈限制">-->
+                <!--                  {{ question.judgeConfig.stackLimit ?? 0 }}-->
+                <!--                </a-descriptions-item>-->
               </a-descriptions>
               <MdViewer :value="question.answer || ''" />
             </a-card>
@@ -97,6 +99,8 @@ import {
   QuestionSubmitAddRequest,
   QuestionVO,
 } from "../../../generated";
+import QuestionSubmitView from "@/views/question/QuestionSubmitView.vue";
+import SubmitHistroyView from "@/views/question/SubmitHistroyView.vue";
 
 interface Props {
   id: string;
